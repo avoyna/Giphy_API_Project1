@@ -3,7 +3,7 @@ from API_Connection import connect_API_giphy, show_files_tkinter
 
 if __name__ == '__main__':
     return_records_limit = 5
-    find_str = input("Type string to find {return_records_limit} images in Giphy (or leave blank to see trending pictures)): ")
+    find_str = input("Type string to find {} images in Giphy (or leave blank to see trending pictures): ".format(return_records_limit))
     if find_str == "":
         retrieved_info, retrieved_small_gif_info = connect_API_giphy.retrieve_data(return_records_limit=return_records_limit)
     else:
