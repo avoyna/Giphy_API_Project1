@@ -2,9 +2,10 @@ import tkinter
 from PIL import ImageTk, Image
 import urllib.request
 import re
+import os
+
 
 imgs = []
-frame_Cnt=[]
 
 def find_image_ext(full_url):
     found = ""
@@ -13,6 +14,12 @@ def find_image_ext(full_url):
     if m:
         found = m.group(1)
     return found
+
+def image_canvas_clicked(event, img_fn):
+    #print("You clicked play!", img_fn, event.x, event.y, event.widget)
+    #img = Image.open(img_fn)
+    #img.show()
+    os.startfile(img_fn)
 
 def show_giphy_image(urls_to_show):
     root = tkinter.Tk()
@@ -28,14 +35,17 @@ def show_giphy_image(urls_to_show):
         urllib.request.urlretrieve(pic_url, image_fn)
 
         img = ImageTk.PhotoImage(Image.open(image_fn))
-        frameCnt.append(img.n_frames)
         imgs.append(img)
-        canvas.create_image(1, 1, anchor=tkinter.NW, image=img)
-        id = canvas.create_text( (8, int(pic_height)-10), text=image_fn)
+        canvas.create_image(1, 1, anchor=tkinter.NW, image=img, tags="canvas_image")
+        image_id = canvas.create_text( (8, int(pic_height)-10), text=image_fn)
+
+        canvas.tag_bind("canvas_image", "<Button-1>", lambda event,
+                                                             img_fn=image_fn: image_canvas_clicked(event, img_fn))
         #Label(root, image=imgs[-1], width=pic_width, height=pic_height).grid()
 
     root.call('wm', 'attributes', '.', '-topmost', True)
-    root.after(1, lambda: root.focus_force())
+    root.after_idle(root.attributes, '-topmost', False)
+    #root.after(1, lambda: root.focus_force())
     root.mainloop()
 
     return
