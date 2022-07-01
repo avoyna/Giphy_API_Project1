@@ -16,7 +16,7 @@ def find_image_ext(full_url):
     return found
 
 def image_canvas_clicked(event, img_fn):
-    #print("You clicked play!", img_fn, event.x, event.y, event.widget)
+    #print("Data^", img_fn, event.x, event.y, event.widget)
     #img = Image.open(img_fn)
     #img.show()
     os.startfile(img_fn)
@@ -25,16 +25,16 @@ def show_giphy_image(urls_to_show):
     root = tkinter.Tk()
     for url_to_show in urls_to_show:
         pic_url, pic_height, pic_width = url_to_show
-        #print(pic_url)
         canvas = tkinter.Canvas(root, height=pic_height, width=pic_width)
         canvas.pack(fill=tkinter.Y, side=tkinter.LEFT)
         image_fn = pic_url.split("/")[-2] +"."+find_image_ext(pic_url)
-        #print(image_fn)
-        #print(pic_url)
-        #break
-        urllib.request.urlretrieve(pic_url, image_fn)
 
-        img = ImageTk.PhotoImage(Image.open(image_fn))
+        if (not os.path.isdir(os.path.join(os.getcwd(),"pics"))):
+            os.makedirs(os.path.join(os.getcwd(),"pics"))
+        img_path = os.path.join(os.getcwd(),"pics", image_fn)
+        urllib.request.urlretrieve(pic_url, img_path)
+
+        img = ImageTk.PhotoImage(Image.open(img_path))
         imgs.append(img)
         canvas.create_image(1, 1, anchor=tkinter.NW, image=img, tags="canvas_image")
         image_id = canvas.create_text( (8, int(pic_height)-10), text=image_fn)

@@ -1,28 +1,27 @@
+import sys
+
 import requests
 
-API_KEY="QxgO5J0IGHTvyaAYaRCeDMNw7EuhW271"
-ENDPOINT_trending="https://api.giphy.com/v1/gifs/trending"
-ENDPOINT_search="https://api.giphy.com/v1/gifs/search"
 
-def retrieve_data(api_key=API_KEY, issearch=False, endpoint=ENDPOINT_trending, return_records_limit=3, rating='g', search_string=""):
+ENDPOINT_trending = "https://api.giphy.com/v1/gifs/trending"
+ENDPOINT_search = "https://api.giphy.com/v1/gifs/search"
+
+def retrieve_data(api_key, issearch=False, endpoint=ENDPOINT_trending, return_records_limit=3,
+                  rating='g', search_string=""):
     result_info = []
     result_small_gif_info = []
-    img_tuple=()
 
     if issearch:
         ENDPOINT = ENDPOINT_search
-        params={"api_key":API_KEY, "limit":return_records_limit,"rating":rating, "q":search_string}
+        params={"api_key":api_key, "limit":return_records_limit,"rating":rating, "q":search_string}
     else:
         ENDPOINT = ENDPOINT_trending
-        params={"api_key":API_KEY, "limit":return_records_limit, "rating":rating}
+        params={"api_key":api_key, "limit":return_records_limit, "rating":rating}
 
     try:
         response = requests.get(ENDPOINT, params=params)
         response.raise_for_status()
         response_json = response.json()
-        #print(response.url)
-        #print(response.text)
-        #print(response_json)
         for gif in response_json["data"]:
             title = gif["title"]
             url = gif["url"]
@@ -36,6 +35,7 @@ def retrieve_data(api_key=API_KEY, issearch=False, endpoint=ENDPOINT_trending, r
 
     except requests.exceptions.RequestException as e:
         print("Connection error - code {}: {}".format(response.status_code, str(e)))
+        sys.exit("Can't connect to GIPHY server")
 
     return result_info, result_small_gif_info
 
