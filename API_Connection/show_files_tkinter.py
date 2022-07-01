@@ -44,7 +44,7 @@ def show_giphy_image(urls_to_show):
         #Label(root, image=imgs[-1], width=pic_width, height=pic_height).grid()
 
     root.call('wm', 'attributes', '.', '-topmost', True)
-    root.after_idle(root.attributes, '-topmost', False)
+    #root.after_idle(root.attributes, '-topmost', False)
     #root.after(1, lambda: root.focus_force())
     root.mainloop()
 
